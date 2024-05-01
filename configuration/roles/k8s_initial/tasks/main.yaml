@@ -1,0 +1,54 @@
+- name: K8S repository key added
+  ansible.builtin.apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_initial_k8s_version }}/deb/Release.key"
+    keyring: "{{ k8s_initial_k8s_node_apt_keyring }}"
+    state: present
+  become: true
+  tags:
+    - k8s_initial
+
+- name: K8S repository added
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by={{ k8s_initial_k8s_node_apt_keyring }}] https://pkgs.k8s.io/core:/stable:/v{{ k8s_initial_k8s_version }}/deb/ /"
+    state: present
+    filename: "/etc/apt/sources.list.d/kubernetes.list"
+    update_cache: true
+  become: true
+  tags:
+    - k8s_initial
+
+- name: Packages installed
+  ansible.builtin.package:
+    state: present
+    name:
+      - curl
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+  become: true
+  tags:
+    - k8s_initial
+
+- name: K8s components installed
+  ansible.builtin.package:
+    state: present
+    name:
+      - kubeadm
+      - kubelet
+      - kubectl
+  become: true
+  tags:
+    - k8s_initial
+
+- name: K8s config created from templated
+  ansible.builtin.template:
+    src: "kubernetes.conf.j2"
+    dest: "/etc/sysctl.d/kubernetes.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  notify: sysctl_system
+  tags:
+    - k8s_initial

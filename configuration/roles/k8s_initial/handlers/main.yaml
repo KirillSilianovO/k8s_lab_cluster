@@ -1,0 +1,8 @@
+---
+
+- name: Sysctl system
+  ansible.builtin.command:
+    cmd: sysctl --system
+  become: true
+  changed_when: false
+  listen: sysctl_system

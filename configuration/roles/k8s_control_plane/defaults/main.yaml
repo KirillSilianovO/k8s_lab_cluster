@@ -1,0 +1,10 @@
+---
+
+k8s_control_plane_pod_network_cidr: 10.10.0.0/16
+k8s_control_plane_flannel_config: "/etc/kube-flannel.yml"
+k8s_control_plane_init_config_file: "/tmp/kubeadm-init-config.yaml"
+k8s_control_plane_init_log_file: "/etc/kubernetes/init.log"
+k8s_control_plane_config_dir: "/home/{{ ansible_user }}/.kube"
+k8s_control_plane_config_file: "{{ k8s_control_plane_config_dir }}/config"
+k8s_control_plane_host_uid: "{{ lookup('ansible.builtin.env', 'HOST_UID') }}"
+k8s_control_plane_host_gid: "{{ lookup('ansible.builtin.env', 'HOST_GID') }}"

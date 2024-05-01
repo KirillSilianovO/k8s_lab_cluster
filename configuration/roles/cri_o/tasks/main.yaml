@@ -1,0 +1,29 @@
+---
+
+- name: CRI-O repository key added
+  ansible.builtin.apt_key:
+    url: "https://pkgs.k8s.io/addons:/cri-o:/{{ cri_o_project_path }}/deb/Release.key"
+    keyring: "{{ cri_o_keyring_file }}"
+    state: present
+  become: true
+  tags:
+    - cri_o
+
+- name: CRI-O repository added
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by={{ cri_o_keyring_file }}] https://pkgs.k8s.io/addons:/cri-o:/{{ cri_o_project_path }}/deb/ /"
+    filename: "{{ cri_o_source_name }}"
+    state: present
+  become: true
+  tags:
+    - cri_o
+
+- name: CRI-O installed
+  ansible.builtin.package:
+    name:
+      - cri-o
+    state: present
+  become: true
+  notify: crio_service_installed
+  tags:
+    - cri_o

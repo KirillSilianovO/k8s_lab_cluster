@@ -1,0 +1,60 @@
+---
+
+- name: Time config
+  ansible.builtin.command:
+    cmd: hwclock --hctosys
+  changed_when: false
+  become: true
+  tags:
+    - system_update
+
+- name: Packages update
+  ansible.builtin.apt:
+    upgrade: full
+    update_cache: true
+    autoremove: true
+  become: true
+  tags:
+    - system_update
+
+- name: Common packages install
+  ansible.builtin.package:
+    name:
+      - curl
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+      - nano
+      - net-tools
+      - mc
+      - python3
+    state: present
+  become: true
+  tags:
+    - initial_config
+
+- name: Swap off
+  ansible.builtin.command:
+    cmd: "swapoff -a"
+  become: true
+  changed_when: false
+  tags:
+    - initial_config
+
+- name: Fstab updated
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^.*swap.*$'
+    replace: ''
+  become: true
+  tags:
+    - initial_config
+
+- name: IP Forwarding enabled
+  ansible.builtin.shell:
+    cmd: modprobe overlay && modprobe br_netfilter
+  become: true
+  changed_when: false
+  tags:
+    - initial_config

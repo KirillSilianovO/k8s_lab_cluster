@@ -1,0 +1,5 @@
+---
+
+autoinstall_config_node_user: "{{ lookup('ansible.builtin.env', 'NODE_USER') }}"
+autoinstall_config_node_password_hash: "{{ lookup('ansible.builtin.env', 'NODE_PASSWORD_HASH') }}"
+autoinstall_config_authorized_ssh_key: "{{ lookup('ansible.builtin.env', 'AUTHORIZED_SSH_KEY') }}"

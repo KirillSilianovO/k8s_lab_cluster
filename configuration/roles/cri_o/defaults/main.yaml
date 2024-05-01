@@ -1,0 +1,6 @@
+---
+
+cri_o_source_name: "cri-o"
+cri_o_source_file: "/etc/apt/sources.list.d/cri-o.list"
+cri_o_keyring_file: "/etc/apt/keyrings/cri-o-apt-keyring.gpg"
+cri_o_project_path: "prerelease:/main"

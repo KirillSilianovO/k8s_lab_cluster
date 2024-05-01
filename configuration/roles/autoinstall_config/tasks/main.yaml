@@ -1,0 +1,10 @@
+---
+
+- name: Autoinstall config created
+  ansible.builtin.template:
+    src: user-data.j2
+    dest: "/autoinstall/user-data.{{ node_name }}"
+    owner: '1000'
+    group: '1000'
+    mode: '0644'
+  delegate_to: localhost

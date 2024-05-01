@@ -1,0 +1,9 @@
+---
+
+- name: Kuberlet service reload
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: kubelet
+  become: true
+  listen: kubeadmin_flags_changed

@@ -1,0 +1,9 @@
+---
+
+- name: CRI-0 service started
+  ansible.builtin.service:
+    name: crio
+    state: started
+    enabled: true
+  become: true
+  listen: crio_service_installed

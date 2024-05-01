@@ -1,0 +1,47 @@
+#cloud-config
+autoinstall:
+  apt:
+    disable_components: [ ]
+    fallback: abort
+    geoip: true
+    mirror-selection:
+      primary:
+        - country-mirror
+    preserve_sources_list: false
+  codecs:
+    install: false
+  drivers:
+    install: false
+  identity:
+    hostname: {{ node_hostname }}
+    password: {{ autoinstall_config_node_password_hash }}
+    realname: {{ autoinstall_config_node_user }}
+    username: {{ autoinstall_config_node_user }}
+  kernel:
+    package: linux-generic
+  keyboard:
+    layout: us
+    toggle: null
+    variant: ''
+  locale: en_US.UTF-8
+  network:
+    version: 2
+    ethernets:
+      enp0s3:
+        dhcp4: true
+        addresses:
+          - {{ node_address }}/24
+      enp0s8:
+        dhcp4: true
+  oem:
+    install: auto
+  source:
+    id: ubuntu-server
+    search_drivers: false
+  ssh:
+    allow-pw: true
+    authorized-keys:
+      - {{ autoinstall_config_authorized_ssh_key }}
+    install-server: true
+  updates: security
+  version: 1

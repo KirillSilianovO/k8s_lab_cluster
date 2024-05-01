@@ -1,0 +1,19 @@
+---
+
+- name: Initial nodes configuration
+  hosts: all_nodes
+  roles:
+    - initial_config
+    - network_config
+    - cri_o
+    - k8s_initial
+
+- name: Control plane configuration
+  hosts: control_panel_nodes
+  roles:
+    - k8s_control_plane
+
+- name: Worker nodes configuration
+  hosts: worker_nodes
+  roles:
+    - k8s_join

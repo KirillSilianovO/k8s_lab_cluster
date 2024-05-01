@@ -1,0 +1,2 @@
+k8s_initial_k8s_node_apt_keyring: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+k8s_initial_k8s_version: "1.29"

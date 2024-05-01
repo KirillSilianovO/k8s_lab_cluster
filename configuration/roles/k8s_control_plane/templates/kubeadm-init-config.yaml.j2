@@ -1,0 +1,15 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    node-ip: {{ ansible_host }}
+localAPIEndpoint:
+  advertiseAddress: "{{ ansible_host }}"
+  bindPort: 6443
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+clusterName: lab_cluster
+controlPlaneEndpoint: {{ ansible_host }}
+networking:
+  podSubnet: {{ k8s_control_plane_pod_network_cidr }}

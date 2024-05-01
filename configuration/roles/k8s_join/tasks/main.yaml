@@ -1,0 +1,24 @@
+---
+
+- name: Join to cluster
+  ansible.builtin.shell:
+    cmd: "kubeadm join {{ k8s_join_host }}:6443 --token {{ k8s_join_token }} --discovery-token-ca-cert-hash {{ k8s_join_ca_cert_hash }}"
+  become: true
+  changed_when: false
+  tags:
+    - k8s_join
+
+- name: Create kubeadmin flags config from template
+  ansible.builtin.template:
+    dest: /var/lib/kubelet/kubeadm-flags.env
+    src: kubeadm-flags.env.j2
+    mode: "0644"
+  become: true
+  notify: kubeadmin_flags_changed
+  tags:
+    - k8s_join
+
+- name: Wait for flannel ready
+  ansible.builtin.wait_for:
+    timeout: 180
+  delegate_to: localhost

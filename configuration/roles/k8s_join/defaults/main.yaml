@@ -1,0 +1,5 @@
+---
+
+k8s_join_host: "{{ lookup('ansible.builtin.env', 'NODE_1_ADDRESS') }}"
+k8s_join_token: "{{ lookup('ansible.builtin.env', 'JOIN_TOKEN') }}"
+k8s_join_ca_cert_hash: "{{ lookup('ansible.builtin.env', 'JOIN_HASH') }}"

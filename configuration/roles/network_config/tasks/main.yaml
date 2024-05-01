@@ -1,0 +1,20 @@
+---
+
+- name: Netfilter modprobe
+  ansible.builtin.command:
+    cmd: modprobe br_netfilter
+  changed_when: false
+  become: true
+  tags:
+    - network_config
+
+- name: Netfilter configured
+  ansible.builtin.template:
+    src: netfilter.conf.j2
+    dest: /etc/modules-load.d/netfilter.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  tags:
+    - network_config

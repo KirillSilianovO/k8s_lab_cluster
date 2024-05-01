@@ -1,0 +1,80 @@
+---
+
+- name: Init config file created from template
+  ansible.builtin.template:
+    dest: "{{ k8s_control_plane_init_config_file }}"
+    src: kubeadm-init-config.yaml.j2
+    mode: "0644"
+  become: true
+  tags:
+    - k8s_control_plane
+
+- name: Init control plane
+  ansible.builtin.shell:
+    cmd: "kubeadm init --config={{ k8s_control_plane_init_config_file }} | tee {{ k8s_control_plane_init_log_file }}"
+  become: true
+  changed_when: false
+  tags:
+    - k8s_control_plane
+
+- name: Copy init log to host
+  ansible.builtin.fetch:
+    dest: /workdir/temp/
+    src: "{{ k8s_control_plane_init_log_file }}"
+  changed_when: false
+  tags:
+    - k8s_control_plane
+
+- name: Config directory created
+  ansible.builtin.file:
+    path: "{{k8s_control_plane_config_dir}}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: true
+  tags:
+    - k8s_control_plane
+
+- name: Config copied
+  ansible.builtin.copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "{{ k8s_control_plane_config_file }}"
+    remote_src: true
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  become: true
+  tags:
+    - k8s_control_plane
+
+- name: Create flannel config
+  ansible.builtin.template:
+    src: kube-flannel.yml.j2
+    dest: "{{ k8s_control_plane_flannel_config }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  become: true
+  tags:
+    - k8s_control_plane
+
+- name: Apply flannel config
+  ansible.builtin.command:
+    cmd: "kubectl apply -f {{ k8s_control_plane_flannel_config }}"
+  changed_when: false
+  tags:
+    - k8s_control_plane
+
+- name: Wait for flannel ready
+  ansible.builtin.wait_for:
+    timeout: 180
+  delegate_to: localhost
+
+- name: Copy config to host
+  ansible.builtin.fetch:
+    dest: /workdir/temp/
+    src: "{{ k8s_control_plane_config_file }}"
+  changed_when: false
+  tags:
+    - k8s_control_plane

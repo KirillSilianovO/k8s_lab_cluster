@@ -1,0 +1,7 @@
+---
+
+- name: Create autoinstall configs
+  hosts: all_nodes
+  gather_facts: false
+  roles:
+    - autoinstall_config
