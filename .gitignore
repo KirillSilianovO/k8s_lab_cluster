@@ -1,0 +1,6 @@
+.idea/*
+configuration/private_key.pem
+.env
+./_tmp/*
+.venv/*
+cluster_config.yaml
